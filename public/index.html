@@ -2,48 +2,20 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>Scraping With Mongoose</title>
-    <style>
-      body { background-color: #F2F6D0 }
-      #wrapper {
-        width: 960px;
-        margin-left: auto;
-        margin-right: auto;
-        padding-top: 5%;
-      }
-      #articles {
-        display: inline-block;
-        overflow: auto;
-        width: 60%;
-        height: 700px;
-      }
-      #notes {
-        float: right;
-        width: 30%;
-      }
-      textarea, input {
-        display: block;
-        width: 100%;
-        background-color: #FCF5C7;
-      }
-      input {
-        height: 36px;
-        font-size: 24px;
-      }
-      textarea {
-        height: 200px;
-        font-size: 18px;
-      }
-    </style>
+    <title>Hungry Hungry John</title>
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
     <div id="wrapper">
-      <h1>Note Scraper</h1>
-      <h2><i>If you can do this...the homework should be no problem.</i></h2>
-      <div id="scrapes"></div>
+      <h1>What Should John Eat?</h1>
+      <h2><i>John gets hungrier by the hour.</i></h2>
+      <div class"center">
+        <div id="scrapes"></div>
+      </div>
       <div id="notes"></div>
+      <button id="search-food"></button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/public/js/app.js"></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>

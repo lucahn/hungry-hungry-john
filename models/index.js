@@ -1,4 +1,4 @@
 module.exports = {
-    Scrap: require("./scrap"),
+    Scrape: require("./scrape"),
     Note: require("./notes")
 };  

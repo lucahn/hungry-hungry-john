@@ -7,16 +7,35 @@ var axios = require("axios");
 var cheerio = require("cheerio");
 
 var db = require("./models");
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 var app = express();
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+const dbURL = "mongodb://localhost/HW";
+const moncon = mongoose.connection;
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI);
+}
+else {
+  mongoose.connect(dbURL);
+}
+
+moncon.on("error", function(err) {
+  console.log("MONGOOSE ERROR: ", err);
+});
+
+moncon.once("open", function(err) {
+  console.log("MONGOOSE CONNECTED");
+});
+
+
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/HW";
 
-mongoose.Promise = Promise;
+// mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 
@@ -29,51 +48,53 @@ app.get("/scrape", function(req, res) {
 
       result.title = $(element).children().find("div.feature-item-content").children().children().text();
       result.author = ($(element).children().find("div.feature-item-content").find("p.feature-item-byline").text());
-      result.text = $(element).children().find("div.feature-item-content").find("p").text();
+      let txt = ($(element).children().find("div.feature-item-content").find("p").text()).split("By");
+      result.text = txt[0];
       result.link = ("https://www.bonappetit.com/" + ($(element).children().find("div.feature-item-content").children().children().attr("href")));
       let img = $(element).children().find("div.feature-item-image").children().children().children().children().attr("srcset").split(" ");
       result.image = img[0];
 
       console.log(result);
 
-      db.Scrap.create(result).then(function(dbScrap) {
-        console.log(dbScrap);
+      db.Scrape.create(result)
+      .then(function(dbScrape) {
+        console.log(dbScrape);
       }).catch(function(err) {
-        return res.json(err);
+         res.json(err);
       });
     });
     res.send("Scrape Complete");
   });
 });
 
-app.get("/scrape", function(req, res) {
-  db.Scrap.find({})
-    .then(function(dbScrap) {
-      res.json(dbScrap);
+app.get("/whattoeat", function(req, res) {
+  db.Scrape.find({})
+    .then(function(dbScrape) {
+      res.json(dbScrape);
     })
     .catch(function(err) {
       res.json(err);
     });
 });
 
-app.get("/scrape/:id", function(req, res) {
-  db.Scrap.findOne({ _id: req.params.id })
+app.get("/whattoeat/:id", function(req, res) {
+  db.Scrape.findOne({ _id: req.params.id })
     .populate("note")
-    .then(function(dbScrap) {
-      res.json(dbScrap);
+    .then(function(dbScrape) {
+      res.json(dbScrape);
     })
     .catch(function(err) {
       res.json(err);
     });
 });
 
-app.post("/scrape/:id", function(req, res) {
+app.post("/whattoeat/:id", function(req, res) {
   db.Notes.create(req.body)
     .then(function(dbNote) {
-      return db.Scrap.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Scrape.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
     })
-    .then(function(dbScrap) {
-      res.json(dbScrap);
+    .then(function(dbScrape) {
+      res.json(dbScrape);
     })
     .catch(function(err) {
       res.json(err);

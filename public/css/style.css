@@ -1,0 +1,20 @@
+.center {
+    align-content: center;
+}
+
+#scrapes {
+    display: grid;
+    grid-template-columns: 33.3% 33.3% 33.3%;
+    max-width: 1000px;
+}
+
+.theBigDiv {
+    max-width: 285px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.theLink {
+    cursor: pointer;
+    text-decoration: none;
+}

@@ -1,9 +1,28 @@
-$.getJSON("/scrape", function(data) {
+$.getJSON("/whattoeat", function(data) {
     for (var i = 0; i < data.length; i++) {
-      $("#scrapes").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+      $("#scrapes").
+      append(
+      `<div data-id="${data[i]._id}" class="theBigDiv">
+        <img class="thePics" src="${data[i].image}">
+        <a class="theLink" href="${data[i].link}">${data[i].title}</a>
+        <p class="theAuthor">${data[i].author}</p>
+        <p class="theText">
+          ${data[i].text}
+        </p>
+      </div>`);
     }
   });
   
+  $(document).on("click", "#search-food", function() {
+    $("#scrapes").empty();
+    $.ajax({
+      method: "GET",
+      url: "/scrape"
+    }).done(function() {
+      location.reload();
+    });
+  });
+
   $(document).on("click", "p", function() {
     $("#notes").empty();
     var thisId = $(this).attr("data-id");
